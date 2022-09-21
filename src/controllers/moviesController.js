@@ -76,13 +76,20 @@ const moviesController = {
     }
   },
   edit: function (req, res) {
-    let Movie = Movies.findByPk(req.params.id);
+    let Movie = Movies.findByPk(req.params.id, {
+      include:[
+        {
+          association: "genre"
+        }
+      ]
+    });
     let allGenres = Genres.findAll({
       order: ["name"],
     });
     Promise.allSettled([Movie, allGenres])
       .then(([Movie, allGenres]) => {
         //return res.send(allGenres)
+        //return res.send(Movie)
         return res.render("moviesEdit", {
           Movie: Movie.value,
           allGenres: allGenres.value,
